@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wain | Personal Portfolio</title>
+    <!-- 预加载关键资源 -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" as="style">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" as="style">
+    
+    <!-- 引入GSAP动画库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
+    <!-- 字体和样式资源 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet" media="print" onload="this.media='all'">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com" defer></script>
+    
+    <script>
+        // Tailwind 配置
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#000000',
+                        secondary: '#1a1a1a',
+                        light: '#f5f5f5',
+                        accent: '#666666',
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-balance {
+                text-wrap: balance;
+            }
+            .photo-hover {
+                @apply transition-all duration-500 hover:scale-[1.02] hover:shadow-lg;
+            }
+        }
+        
+        /* 内联关键CSS */
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+            margin: 0;
+            padding: 0;
+        }
+        
+        #navbar {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 50;
+            transition: all 0.3s ease;
+            padding: 1rem 0;
+        }
+        
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .lang-btn {
+            padding: 0.75rem 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: color 0.2s ease, background-color 0.2s ease;
+        }
+        
+        .lang-btn.active {
+            background-color: #000;
+            color: #fff;
+        }
+    </style>
+    
+    <style>
+        /* SVG动画容器样式 - 无边框 */
+        .animation-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
+
+        .svg-container {
+            width: 100%;
+            height: 600px;
+            background-color: transparent;
+            overflow: hidden; /* 确保超出部分不可见 */
+        }
+
+        .svg-container line {
+            stroke-width: 3;
+            stroke: rgba(216, 216, 216, 1.0);
+        }
+        
+        /* 其他样式 */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        
+        .nav-scrolled {
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .lang-btn:not(.active):hover {
+            background-color: #f3f4f6;
+        }
+        
+        /* 摄影集网格布局 */
+        .photo-grid {
+            display: grid;
+            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        }
+        
+        @media (min-width: 768px) {
+            .photo-grid {
+                grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            }
+            .photo-wide {
+                grid-column: span 2;
+            }
+            .photo-tall {
+                grid-row: span 2;
+            }
+        }
+        
+        @media (min-width: 1200px) {
+            .photo-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+    </style>
+</head>
+<body class="bg-white text-black font-inter">
+    <!-- 导航栏 -->
+    <header id="navbar">
+        <div class="container mx-auto px-4 md:px-8 flex justify-between items-center">
+            <a href="#" class="text-2xl font-black tracking-tighter">Wain<span class="text-gray-500">.</span></a>
+            
+            <!-- 桌面端导航 -->
+            <div class="hidden md:flex items-center space-x-8">
+                <nav class="flex space-x-8">
+                    <a href="#about" class="font-medium hover:text-gray-500 transition-colors" data-i18n="nav.about">About</a>
+                    <a href="#photography" class="font-medium hover:text-gray-500 transition-colors" data-i18n="nav.photography">Photography</a>
+                    <a href="#skills" class="font-medium hover:text-gray-500 transition-colors" data-i18n="nav.skills">Skills</a>
+                    <a href="#projects" class="font-medium hover:text-gray-500 transition-colors" data-i18n="nav.projects">Projects</a>
+                    <a href="#contact" class="font-medium hover:text-gray-500 transition-colors" data-i18n="nav.contact">Contact</a>
+                </nav>
+                
+                <!-- 中英切换按钮 -->
+                <div class="flex border border-gray-300">
+                    <button id="en-lang" class="lang-btn active" data-lang="en">EN</button>
+                    <button id="zh-lang" class="lang-btn" data-lang="zh">中</button>
+                </div>
+            </div>
+            
+            <!-- 移动端菜单按钮 -->
+            <button id="menu-toggle" class="md:hidden text-2xl">
+                <i class="fa fa-bars"></i>
+            </button>
+        </div>
+        
+        <!-- 移动端导航菜单 -->
+        <div id="mobile-menu" class="md:hidden bg-white absolute w-full left-0 top-full shadow-lg transform -translate-y-full opacity-0 transition-all duration-300 pointer-events-none">
+            <div class="container mx-auto px-4 py-4 flex flex-col space-y-4">
+                <a href="#about" class="font-medium py-2 hover:text-gray-500 transition-colors" data-i18n="nav.about">About</a>
+                <a href="#photography" class="font-medium py-2 hover:text-gray-500 transition-colors" data-i18n="nav.photography">Photography</a>
+                <a href="#skills" class="font-medium py-2 hover:text-gray-500 transition-colors" data-i18n="nav.skills">Skills</a>
+                <a href="#projects" class="font-medium py-2 hover:text-gray-500 transition-colors" data-i18n="nav.projects">Projects</a>
+                <a href="#contact" class="font-medium py-2 hover:text-gray-500 transition-colors" data-i18n="nav.contact">Contact</a>
+                
+                <!-- 移动端中英切换 -->
+                <div class="flex border border-gray-300 w-fit">
+                    <button id="en-lang-mobile" class="lang-btn active" data-lang="en">EN</button>
+                    <button id="zh-lang-mobile" class="lang-btn" data-lang="zh">中</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 英雄区域 - 包含SVG动画 -->
+    <section class="min-h-screen flex items-center justify-center pt-20 pb-16 px-4">
+        <div class="container mx-auto grid md:grid-cols-2 gap-12 items-center">
+            <div class="fade-in">
+                <h1 class="text-[clamp(2.5rem,8vw,5rem)] font-black leading-none tracking-tight mb-6">
+                    <span data-i18n="hero.creative">Creative</span> <br>
+                    <span class="relative inline-block">
+                        <span data-i18n="hero.designer">Developer</span>
+                        <span class="absolute -bottom-2 left-0 w-full h-1 bg-black"></span>
+                    </span>
+                </h1>
+                <p class="text-gray-600 text-lg md:text-xl mb-8 max-w-lg text-balance" data-i18n="hero.description">
+                    I create interactive digital experiences with a focus on innovative animations and user-centered design.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <a href="#photography" class="px-8 py-3 bg-black text-white font-medium hover:bg-gray-800 transition-colors" data-i18n="hero.viewPhotos">
+                        View My Photos
+                    </a>
+                    <a href="#projects" class="px-8 py-3 border border-black text-black font-medium hover:bg-gray-100 transition-colors" data-i18n="hero.viewWork">
+                        View Work
+                    </a>
+                </div>
+            </div>
+            
+            <!-- SVG动画容器 -->
+            <div class="relative fade-in visible animation-container">
+                <svg class="svg-container" id="magic-svg">
+                    <!-- SVG内容将通过JS动态生成 -->
+                </svg>
+            </div>
+        </div>
+    </section>
+
+    <!-- 摄影集页面 -->
+    <section id="photography" class="py-24 bg-gray-50">
+        <div class="container mx-auto px-4 md:px-8">
+            <!-- 摄影集标题区 -->
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-[clamp(1.8rem,6vw,3.5rem)] font-bold mb-4" data-i18n="photography.title">My Photography</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto text-lg mb-6" data-i18n="photography.desc">
+                    A collection of moments I've captured through my lens — focusing on minimalism, light, and everyday beauty.
+                </p>
+                <div class="w-24 h-1 bg-black mx-auto"></div>
+            </div>
+
+            <!-- 摄影作品网格 -->
+            <div class="photo-grid fade-in">
+                <!-- 照片1：宽图 -->
+                <div class="photo-wide overflow-hidden rounded-lg bg-gray-100 group">
+                    <img src="myWeb/img/23f0d34092e63dec7f73a17fe76ff67e.jpeg" alt="Mountain landscape with snow" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 photo-hover" loading="lazy">
+                </div>
+                <!-- 照片2：常规图 -->
+                <div class="overflow-hidden rounded-lg bg-gray-100 group">
+                    <img src="myWeb/img/IMG20230722142402.jpg" alt="Forest path with trees" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 photo-hover" loading="lazy">
+                </div>
+                <!-- 照片3：高图 -->
+                <div class="photo-tall overflow-hidden rounded-lg bg-gray-100 group">
+                    <img src="myWeb/img/IMG_20240110_162618.jpg" alt="Tall trees in misty forest" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 photo-hover" loading="lazy">
+                </div>
+                <!-- 照片4：常规图 -->
+                <div class="overflow-hidden rounded-lg bg-gray-100 group">
+                    <img src="myWeb/img/IMG_20220327_182614.jpg" alt="Lake with mountain reflection" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 photo-hover" loading="lazy">
+                </div>
+                <!-- 照片5：常规图 -->
+                <div class="overflow-hidden rounded-lg bg-gray-100 group">
+                    <img src="myWeb/img/IMG20230706210718.jpg" alt="Rocky coast with waves" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 photo-hover" loading="lazy">
+                </div>
+                <!-- 照片6：宽图 -->
+                <div class="photo-wide overflow-hidden rounded-lg bg-gray-100 group">
+                    <img src="myWeb/https://picsum.photos/id/1019/1200/600?format=webp" alt="River valley with green fields" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 photo-hover" loading="lazy">
+                </div>
+                <!-- 照片7：常规图 -->
+                <div class="overflow-hidden rounded-lg bg-gray-100 group">
+                    <img src="myWeb/img/IMG20230716113825.jpg" alt="Desert landscape with sand dunes" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 photo-hover" loading="lazy">
+                </div>
+                <!-- 照片8：高图 -->
+                <div class="photo-tall overflow-hidden rounded-lg bg-gray-100 group">
+                    <img src="myWeb/img/IMG_20240322_183337.jpg" alt="Waterfall in forest" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 photo-hover" loading="lazy">
+                </div>
+            </div>
+
+            <!-- 底部引导 -->
+            <div class="text-center mt-16 fade-in">
+                <a href="#about" class="inline-flex items-center gap-2 text-black font-medium hover:text-gray-600 transition-colors" data-i18n="photography.seeMore">
+                    <span>Learn more about me</span>
+                    <i class="fa fa-long-arrow-down"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 关于我页面 -->
+    <section id="about" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-[clamp(1.5rem,5vw,3rem)] font-bold mb-4" data-i18n="about.title">About Me</h2>
+                <div class="w-20 h-1 bg-black mx-auto"></div>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="relative fade-in">
+                    <div class="aspect-[3/4] max-w-md overflow-hidden">
+                        <img src="https://picsum.photos/id/1076/600/800?format=webp" alt="Wain working at desk" class="w-full h-full object-cover grayscale" loading="lazy">
+                    </div>
+                    <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-black flex items-center justify-center text-white hidden md:flex">
+                        <div class="text-center">
+                            <span class="block text-3xl font-bold">2+</span>
+                            <span class="block text-sm" data-i18n="about.experience">Years Experience</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="fade-in">
+                    <h3 class="text-2xl font-bold mb-6" data-i18n="about.hello">Hello, I'm Wain</h3>
+                    <p class="text-gray-700 mb-6 leading-relaxed" data-i18n="about.description1">
+                        I'm a passionate designer and developer with over 5 years of experience creating digital products that users love. My approach combines clean aesthetics with functional design principles to build solutions that not only look great but work beautifully.
+                    </p>
+                    <p class="text-gray-700 mb-8 leading-relaxed" data-i18n="about.description2">
+                        I specialize in front-end development, UI/UX design, and creating cohesive brand experiences across digital platforms. When I'm not designing or coding, you can find me exploring photography, hiking, or experimenting with new creative tools.
+                    </p>
+                    
+                    <div class="grid grid-cols-2 gap-6 mb-8">
+                        <div>
+                            <h4 class="font-bold mb-2" data-i18n="about.name">Name:</h4>
+                            <p class="text-gray-600">Wain</p>
+                        </div>
+                        <div>
+                            <h4 class="font-bold mb-2" data-i18n="about.email">Email:</h4>
+                            <p class="text-gray-600">hailunzhang302@gmail.com</p>
+                        </div>
+                        <div>
+                            <h4 class="font-bold mb-2" data-i18n="about.location">Location:</h4>
+                            <p class="text-gray-600" data-i18n="about.locationValue"> Guangdong Province, China</p>
+                        </div>
+                        <div>
+                            <h4 class="font-bold mb-2" data-i18n="about.availability">Availability:</h4>
+                            <p class="text-gray-600" data-i18n="about.availabilityValue">Freelance & Full-time</p>
+                        </div>
+                    </div>
+                    
+                    <a href="#contact" class="inline-block px-8 py-3 bg-black text-white font-medium hover:bg-gray-800 transition-colors" data-i18n="about.letsTalk">
+                        Let's Talk
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 技能页面 -->
+    <section id="skills" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-[clamp(1.5rem,5vw,3rem)] font-bold mb-4" data-i18n="skills.title">My Skills</h2>
+                <div class="w-20 h-1 bg-black mx-auto mb-6"></div>
+                <p class="text-gray-600 max-w-2xl mx-auto" data-i18n="skills.description">
+                    I've worked with a variety of technologies and tools throughout my career. Here's an overview of my technical skills and expertise.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-16">
+                <!-- 设计技能 -->
+                <div class="fade-in">
+                    <h3 class="text-2xl font-bold mb-8 flex items-center">
+                        <span class="w-10 h-10 bg-black text-white flex items-center justify-center mr-4">
+                            <i class="fa fa-paint-brush"></i>
+                        </span>
+                        <span data-i18n="skills.designSkills">Design Skills</span>
+                    </h3>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">UI/UX Design</span>
+                                <span>90%</span>
+                            </div>
+                            <div class="w-full h-2 bg-gray-200">
+                                <div class="h-full bg-black" style="width: 90%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium" data-i18n="skills.typography">Typography</span>
+                                <span>85%</span>
+                            </div>
+                            <div class="w-full h-2 bg-gray-200">
+                                <div class="h-full bg-black" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium" data-i18n="skills.branding">Branding</span>
+                                <span>80%</span>
+                            </div>
+                            <div class="w-full h-2 bg-gray-200">
+                                <div class="h-full bg-black" style="width: 80%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium" data-i18n="skills.wireframing">Wireframing</span>
+                                <span>95%</span>
+                            </div>
+                            <div class="w-full h-2 bg-gray-200">
+                                <div class="h-full bg-black" style="width: 95%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 开发技能 -->
+                <div class="fade-in">
+                    <h3 class="text-2xl font-bold mb-8 flex items-center">
+                        <span class="w-10 h-10 bg-black text-white flex items-center justify-center mr-4">
+                            <i class="fa fa-code"></i>
+                        </span>
+                        <span data-i18n="skills.devSkills">Development Skills</span>
+                    </h3>
+                    
+                    <div class="space-y-6">
+						<div>
+						    <div class="flex justify-between mb-2">
+						        <span class="font-medium" >JAVA</span>
+						        <span>80%</span>
+						    </div>
+						    <div class="w-full h-2 bg-gray-200">
+						        <div class="h-full bg-black" style="width: 80%"></div>
+						    </div>
+						</div>
+						<div>
+						    <div class="flex justify-between mb-2">
+						        <span class="font-medium" >SQL</span>
+						        <span>70%</span>
+						    </div>
+						    <div class="w-full h-2 bg-gray-200">
+						        <div class="h-full bg-black" style="width: 70%"></div>
+						    </div>
+						</div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">HTML/CSS</span>
+                                <span>75%</span>
+                            </div>
+                            <div class="w-full h-2 bg-gray-200">
+                                <div class="h-full bg-black" style="width: 75%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">JavaScript</span>
+                                <span>75%</span>
+                            </div>
+                            <div class="w-full h-2 bg-gray-200">
+                                <div class="h-full bg-black" style="width: 75%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">React</span>
+                                <span>60%</span>
+                            </div>
+                            <div class="w-full h-2 bg-gray-200">
+                                <div class="h-full bg-black" style="width: 60%"></div>
+                            </div>
+                        </div>
+                        
+                        
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 工具展示 -->
+            <div class="mt-20 fade-in">
+                <h3 class="text-2xl font-bold mb-10 text-center" data-i18n="skills.tools">Tools I Use</h3>
+                
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8">
+                    <div class="text-center p-6 border border-gray-200 hover:border-black transition-colors">
+                        <i class="fa fa-figma text-4xl mb-4"></i>
+                        <h4 class="font-medium">Figma</h4>
+                    </div>
+                    
+                    <div class="text-center p-6 border border-gray-200 hover:border-black transition-colors">
+                        <i class="fa fa-code text-4xl mb-4"></i>
+                        <h4 class="font-medium">VS Code</h4>
+                    </div>
+                    
+                    <div class="text-center p-6 border border-gray-200 hover:border-black transition-colors">
+                        <i class="fa fa-github text-4xl mb-4"></i>
+                        <h4 class="font-medium">GitHub</h4>
+                    </div>
+                    
+                    <div class="text-center p-6 border border-gray-200 hover:border-black transition-colors">
+                        <i class="fa fa-paint-brush text-4xl mb-4"></i>
+                        <h4 class="font-medium">Photoshop</h4>
+                    </div>
+                    
+                    <div class="text-center p-6 border border-gray-200 hover:border-black transition-colors">
+                        <i class="fa fa-terminal text-4xl mb-4"></i>
+                        <h4 class="font-medium" data-i18n="skills.terminal">Terminal</h4>
+                    </div>
+                    
+                    <div class="text-center p-6 border border-gray-200 hover:border-black transition-colors">
+                        <i class="fa fa-mobile text-4xl mb-4"></i>
+                        <h4 class="font-medium" data-i18n="skills.deviceLab">Device Lab</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 项目展示页面 -->
+    <section id="projects" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-[clamp(1.5rem,5vw,3rem)] font-bold mb-4" data-i18n="projects.title">My Projects</h2>
+                <div class="w-20 h-1 bg-black mx-auto mb-6"></div>
+                <p class="text-gray-600 max-w-2xl mx-auto" data-i18n="projects.description">
+                    A selection of my recent work showcasing my skills in design and development. Each project represents a unique challenge and solution.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- 项目1 -->
+                <div class="bg-white overflow-hidden group fade-in">
+                    <div class="relative overflow-hidden">
+                        <img src="https://picsum.photos/id/180/600/400?format=webp" alt="E-commerce website project screenshot" class="w-full h-64 object-cover grayscale group-hover:grayscale-0 transition-all duration-500 transform group-hover:scale-105" loading="lazy">
+                        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300"></div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2" data-i18n="projects.ecommerce">E-commerce Redesign</h3>
+                        <p class="text-gray-600 mb-4" data-i18n="projects.ecommerceDesc">
+                            A complete redesign of an e-commerce platform focusing on improved user experience and conversion optimization.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="text-xs bg-gray-100 px-3 py-1">UI/UX</span>
+                            <span class="text-xs bg-gray-100 px-3 py-1" data-i18n="projects.ecommerceTag">E-commerce</span>
+                            <span class="text-xs bg-gray-100 px-3 py-1">React</span>
+                        </div>
+                        <a href="#" class="inline-flex items-center font-medium hover:underline">
+                            <span data-i18n="projects.viewProject">View Project</span> <i class="fa fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 项目2 -->
+                <div class="bg-white overflow-hidden group fade-in">
+                    <div class="relative overflow-hidden">
+                        <img src="https://picsum.photos/id/42/600/400?format=webp" alt="Fitness tracker app interface" class="w-full h-64 object-cover grayscale group-hover:grayscale-0 transition-all duration-500 transform group-hover:scale-105" loading="lazy">
+                        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300"></div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2" data-i18n="projects.fitness">Fitness Tracker App</h3>
+                        <p class="text-gray-600 mb-4" data-i18n="projects.fitnessDesc">
+                            A mobile application designed to help users track fitness goals, workouts, and progress with intuitive visualizations.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="text-xs bg-gray-100 px-3 py-1" data-i18n="projects.mobile">Mobile</span>
+                            <span class="text-xs bg-gray-100 px-3 py-1">UI Design</span>
+                            <span class="text-xs bg-gray-100 px-3 py-1">JavaScript</span>
+                        </div>
+                        <a href="#" class="inline-flex items-center font-medium hover:underline">
+                            <span data-i18n="projects.viewProject">View Project</span> <i class="fa fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 项目3 -->
+                <div class="bg-white overflow-hidden group fade-in">
+                    <div class="relative overflow-hidden">
+                        <img src="https://picsum.photos/id/3/600/400?format=webp" alt="Architect portfolio website" class="w-full h-64 object-cover grayscale group-hover:grayscale-0 transition-all duration-500 transform group-hover:scale-105" loading="lazy">
+                        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300"></div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2" data-i18n="projects.architect">Architect Portfolio</h3>
+                        <p class="text-gray-600 mb-4" data-i18n="projects.architectDesc">
+                            A minimalist portfolio website for an architecture firm, showcasing their projects with stunning imagery and smooth transitions.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="text-xs bg-gray-100 px-3 py-1" data-i18n="projects.webDesign">Web Design</span>
+                            <span class="text-xs bg-gray-100 px-3 py-1" data-i18n="projects.portfolio">Portfolio</span>
+                            <span class="text-xs bg-gray-100 px-3 py-1">HTML/CSS</span>
+                        </div>
+                        <a href="#" class="inline-flex items-center font-medium hover:underline">
+                            <span data-i18n="projects.viewProject">View Project</span> <i class="fa fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="#" class="inline-block px-8 py-3 border border-black text-black font-medium hover:bg-black hover:text-white transition-colors" data-i18n="projects.viewAll">
+                    View All Projects
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系页面 -->
+    <section id="contact" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-[clamp(1.5rem,5vw,3rem)] font-bold mb-4" data-i18n="contact.title">Get In Touch</h2>
+                <div class="w-20 h-1 bg-black mx-auto mb-6"></div>
+                <p class="text-gray-600 max-w-2xl mx-auto" data-i18n="contact.description">
+                    Interested in working together? Fill out the form below with some info about your project, and I'll get back to you as soon as I can.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-16 items-start">
+                <div class="fade-in">
+                    <form class="space-y-6">
+                        <div>
+                            <label for="name" class="block text-sm font-medium mb-2" data-i18n="contact.yourName">Your Name</label>
+                            <input type="text" id="name" class="w-full px-4 py-3 border border-gray-300 focus:border-black focus:outline-none transition-colors" placeholder="John Smith">
+                        </div>
+                        
+                        <div>
+                            <label for="email" class="block text-sm font-medium mb-2" data-i18n="contact.email">Email Address</label>
+                            <input type="email" id="email" class="w-full px-4 py-3 border border-gray-300 focus:border-black focus:outline-none transition-colors" placeholder="john@example.com">
+                        </div>
+                        
+                        <div>
+                            <label for="subject" class="block text-sm font-medium mb-2" data-i18n="contact.subject">Subject</label>
+                            <input type="text" id="subject" class="w-full px-4 py-3 border border-gray-300 focus:border-black focus:outline-none transition-colors" placeholder="Project Inquiry">
+                        </div>
+                        
+                        <div>
+                            <label for="message" class="block text-sm font-medium mb-2" data-i18n="contact.message">Your Message</label>
+                            <textarea id="message" rows="5" class="w-full px-4 py-3 border border-gray-300 focus:border-black focus:outline-none transition-colors" placeholder="Tell me about your project..."></textarea>
+                        </div>
+                        
+                        <button type="submit" class="w-full px-8 py-3 bg-black text-white font-medium hover:bg-gray-800 transition-colors" data-i18n="contact.send">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="fade-in">
+                    <div class="bg-white p-8 mb-8 shadow-sm">
+                        <h3 class="text-2xl font-bold mb-6" data-i18n="contact.info">Contact Information</h3>
+                        
+                        <div class="space-y-6">
+                            <div class="flex items-start">
+                                <span class="w-10 h-10 bg-black text-white flex items-center justify-center mr-4 flex-shrink-0">
+                                    <i class="fa fa-map-marker"></i>
+                                </span>
+                                <div>
+                                    <h4 class="font-medium mb-1" data-i18n="contact.location">Location</h4>
+                                    <p class="text-gray-600" data-i18n="contact.locationValue">No. 8, Yuan Cun Yiheng Road, Tianhe District, Guangzhou, Guangdong Province</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <span class="w-10 h-10 bg-black text-white flex items-center justify-center mr-4 flex-shrink-0">
+                                    <i class="fa fa-envelope"></i>
+                                </span>
+                                <div>
+                                    <h4 class="font-medium mb-1" data-i18n="contact.email">Email</h4>
+                                    <p class="text-gray-600">hailunzhang302@gmail.com</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <span class="w-10 h-10 bg-black text-white flex items-center justify-center mr-4 flex-shrink-0">
+                                    <i class="fa fa-phone"></i>
+                                </span>
+                                <div>
+                                    <h4 class="font-medium mb-1" data-i18n="contact.phone">Phone</h4>
+                                    <p class="text-gray-600">+86 18819798463</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-2xl font-bold mb-6" data-i18n="contact.follow">Follow Me</h3>
+                        <div class="flex space-x-4">
+                            <a href="#" class="w-10 h-10 border border-black flex items-center justify-center hover:bg-black hover:text-white transition-colors">
+                                <i class="fa fa-instagram"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 border border-black flex items-center justify-center hover:bg-black hover:text-white transition-colors">
+                                <i class="fa fa-dribbble"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 border border-black flex items-center justify-center hover:bg-black hover:text-white transition-colors">
+                                <i class="fa fa-linkedin"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 border border-black flex items-center justify-center hover:bg-black hover:text-white transition-colors">
+                                <i class="fa fa-github"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="py-12 bg-black text-white">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <a href="#" class="text-2xl font-black tracking-tighter mb-6 md:mb-0">Wain<span class="text-gray-400">.</span></a>
+                
+                <p class="text-gray-400 text-center md:text-right" data-i18n="footer.copyright">
+                    &copy; 2023 Wain. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // 确保DOM完全加载后再执行
+        document.addEventListener('DOMContentLoaded', function() {
+            // SVG动画逻辑
+            const layoutOptions = {
+                rows: 10,
+                cols: 10,
+                width: 0,
+                height: 0,
+                top: 0,
+                left: 0,
+                mouseRadius: 150, // 减小鼠标影响范围
+                ballRadius: 20    // 小球半径，用于边界计算
+            };
+
+            const movingCircles = {
+                container: document.getElementById('magic-svg'),
+                balls: [],
+
+                // 更新容器信息
+                resize() {
+                    if (!this.container) return;
+                    
+                    // 强制重排后再获取尺寸，解决初始计算不准确问题
+                    this.container.style.display = 'none';
+                    this.container.offsetHeight; // 触发重排
+                    this.container.style.display = '';
+                    
+                    const rect = this.container.getBoundingClientRect();
+                    layoutOptions.width = rect.width;
+                    layoutOptions.height = rect.height;
+                    layoutOptions.left = rect.left;
+                    layoutOptions.top = rect.top;
+                    
+                    // 重新布局小球
+                    if (this.balls.length > 0) {
+                        this.repositionBalls();
+                    }
+                },
+
+                // 重新定位小球（窗口大小改变时）
+                repositionBalls() {
+                    const margin = 40;
+                    
+                    this.balls.forEach((ball, index) => {
+                        const ri = Math.floor(index / (layoutOptions.cols + 1));
+                        const ci = index % (layoutOptions.cols + 1);
+                        
+                        let x = margin + (layoutOptions.width - margin * 2) / layoutOptions.cols * ci;
+                        let y = margin + (layoutOptions.height - margin * 2) / layoutOptions.rows * ri;
+                        
+                        ball.originX = x;
+                        ball.originY = y;
+                        
+                        // 更新位置
+                        ball.setAttribute('cx', x);
+                        ball.setAttribute('cy', y);
+                        ball.line.setAttribute('x1', x);
+                        ball.line.setAttribute('y1', y);
+                        ball.line.setAttribute('x2', x);
+                        ball.line.setAttribute('y2', y);
+                    });
+                },
+
+                // 初始化
+                init() {
+                    if (!this.container) {
+                        console.error('SVG容器未找到');
+                        return;
+                    }
+
+                    // 设置SVG尺寸
+                    this.container.setAttribute('width', '100%');
+                    this.container.setAttribute('height', '100%');
+                    
+                    // 确保在获取尺寸前容器已渲染
+                    setTimeout(() => {
+                        this.resize();
+                        this.create({ radius: layoutOptions.ballRadius });
+                    }, 100);
+
+                    // 监听窗口大小变化
+                    window.addEventListener('resize', () => this.resize());
+                    
+                    // 鼠标移动事件处理
+                    const handleMouseMove = (event) => {
+                        event.preventDefault();            
+                        this.update(event.x, event.y);
+                    };
+                    
+                    document.addEventListener('mousemove', handleMouseMove.bind(this));
+                },
+
+                // 创建小球和线条
+                create(option) {
+                    const radius = (option || { radius: 10 }).radius;
+                    
+                    // 清空现有内容
+                    while (this.container.firstChild) {
+                        this.container.removeChild(this.container.firstChild);
+                    }
+                    this.balls = [];
+
+                    // 创建网格
+                    for (let ri = 0; ri <= layoutOptions.rows; ++ ri) {
+                        for (let ci = 0; ci <= layoutOptions.cols; ++ ci) {
+                            // 计算位置，考虑边距
+                            const margin = 40;
+                            let x = margin + (layoutOptions.width - margin * 2) / layoutOptions.cols * ci;
+                            let y = margin + (layoutOptions.height - margin * 2) / layoutOptions.rows * ri;
+
+                            // 创建线
+                            const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                            line.setAttribute("x1", x);
+                            line.setAttribute("y1", y);
+                            line.setAttribute("x2", x);
+                            line.setAttribute("y2", y);
+                            this.container.appendChild(line);
+
+                            // 创建点
+                            const point = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                            point.setAttribute("fill", "rgb(0, 0, 0)");
+                            point.setAttribute("cx", x);
+                            point.setAttribute("cy", y);
+                            point.setAttribute("r", radius / 5);
+                            this.container.appendChild(point);
+
+                            // 创建球
+                            const ball = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                            ball.setAttribute("fill", "rgb(0, 0, 0)");
+                            ball.setAttribute("cx", x);
+                            ball.setAttribute("cy", y);
+                            ball.setAttribute("r", radius);
+                            this.container.appendChild(ball);
+
+                            // 存储关联元素和原始位置
+                            ball.line = line;
+                            ball.originX = x;
+                            ball.originY = y;                
+
+                            this.balls.push(ball);
+                        }
+                    }
+                },
+
+                // 更新小球位置，添加边界检查
+                update(x, y) {
+                    // 计算鼠标在SVG内的坐标
+                    const mouseX = x - layoutOptions.left;
+                    const mouseY = y - layoutOptions.top;
+
+                    // 确保有小球可更新
+                    if (this.balls.length === 0) return;
+
+                    // 边界限制值（考虑小球半径）
+                    const minX = layoutOptions.ballRadius;
+                    const maxX = layoutOptions.width - layoutOptions.ballRadius;
+                    const minY = layoutOptions.ballRadius;
+                    const maxY = layoutOptions.height - layoutOptions.ballRadius;
+
+                    for (const ball of this.balls) {
+                        const dx = ball.originX - mouseX;
+                        const dy = ball.originY - mouseY;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+
+                        // 当鼠标在影响范围内时移动小球
+                        if (distance <= layoutOptions.mouseRadius) {                
+                            // 计算目标位置
+                            let targetX = mouseX + dx / distance * layoutOptions.mouseRadius;
+                            let targetY = mouseY + dy / distance * layoutOptions.mouseRadius;
+                            
+                            // 边界检查，确保小球不会超出画布
+                            targetX = Math.max(minX, Math.min(targetX, maxX));
+                            targetY = Math.max(minY, Math.min(targetY, maxY));
+
+                            // 清除现有动画
+                            if (ball.animater) {
+                                ball.animater.kill();
+                            }
+
+                            // 创建新动画
+                            ball.animater = gsap.timeline()
+                                .to(ball, {
+                                    attr: {
+                                        cx: targetX,
+                                        cy: targetY,
+                                    },
+                                    duration: 0.5,
+                                    ease: "power3.out",
+                                })
+                                .to(ball.line, {
+                                    attr: {
+                                        x2: targetX,
+                                        y2: targetY,
+                                    },
+                                    duration: 0.5,
+                                    ease: "power3.out",
+                                }, "<")
+                                .to(ball, {
+                                    attr: {
+                                        cx: ball.originX,
+                                        cy: ball.originY,
+                                    },
+                                    duration: 1,
+                                    ease: "power3.out",
+                                }, "<0.1")
+                                .to(ball.line, {
+                                    attr: {
+                                        x2: ball.originX,
+                                        y2: ball.originY,
+                                    },
+                                    duration: 1,
+                                    ease: "power3.out",
+                                }, "<");
+                        }
+                    }
+                }
+            };
+
+            // 页面加载完成后初始化动画
+            movingCircles.init();
+
+            // 语言翻译数据
+            const userLang = localStorage.getItem('preferredLanguage') || 'en';
+            const translations = {
+                en: {
+                    "nav.about": "About",
+                    "nav.photography": "Photography",
+                    "nav.skills": "Skills",
+                    "nav.projects": "Projects",
+                    "nav.contact": "Contact",
+                    "hero.creative": "Creative",
+                    "hero.designer": "Developer",
+                    "hero.description": "I focus on developing and curating interactive digital experiences, and prioritize both innovative animations and user-centric design principles.",
+                    "hero.viewPhotos": "View My Photos",
+                    "hero.viewWork": "View Work",
+                    "photography.title": "My Photography",
+                    "photography.desc": "A collection of moments captured through the lens — focusing on the beauty of real life, light and shadow, and humanity.",
+                    "photography.seeMore": "Learn more about me",
+                    "about.title": "About Me",
+                    "about.experience": "Years Experience",
+                    "about.hello": "Hello, I'm Wain",
+                    "about.description1": "I’m a passionate developer with over 2 years of development experience, and I enjoy building user-loved digital products.",
+                    "about.description2": "I specialize in backend development, but I find UI/UX design—with its focus on crafting consistent brand experiences across various digital platforms—really fascinating. When I’m not designing or coding, you’ll find me exploring photography, going hiking, or trying out new creative tools.",
+                    "about.name": "Name:",
+                    "about.email": "Email:",
+                    "about.location": "Location:",
+                    "about.locationValue": " Guangdong Province, China",
+                    "about.availability": "Availability:",
+                    "about.availabilityValue": "Freelance & Full-time",
+                    "about.letsTalk": "Let's Talk",
+                    "skills.title": "My Skills",
+                    "skills.description": "I've worked with a variety of technologies and tools throughout my career.",
+                    "skills.designSkills": "Design Skills",
+                    "skills.typography": "Typography",
+                    "skills.branding": "Branding",
+                    "skills.wireframing": "Wireframing",
+                    "skills.devSkills": "Development Skills",
+                    "skills.responsive": "Responsive Design",
+                    "skills.tools": "Tools I Use",
+                    "skills.terminal": "Terminal",
+                    "skills.deviceLab": "Device Lab",
+                    "projects.title": "My Projects",
+                    "projects.description": "A selection of my recent work showcasing my skills in design and development.",
+                    "projects.ecommerce": "E-commerce Redesign",
+                    "projects.ecommerceDesc": "A complete redesign of an e-commerce platform focusing on improved user experience.",
+                    "projects.ecommerceTag": "E-commerce",
+                    "projects.fitness": "Fitness Tracker App",
+                    "projects.fitnessDesc": "A mobile application designed to help users track fitness goals.",
+                    "projects.mobile": "Mobile",
+                    "projects.architect": "Architect Portfolio",
+                    "projects.architectDesc": "A minimalist portfolio website for an architecture firm.",
+                    "projects.webDesign": "Web Design",
+                    "projects.portfolio": "Portfolio",
+                    "projects.viewProject": "View Project",
+                    "projects.viewAll": "View All Projects",
+                    "contact.title": "Get In Touch",
+                    "contact.description": "Interested in working together? Fill out the form below.",
+                    "contact.yourName": "Your Name",
+                    "contact.email": "Email Address",
+                    "contact.subject": "Subject",
+                    "contact.message": "Your Message",
+                    "contact.send": "Send Message",
+                    "contact.info": "Contact Information",
+                    "contact.location": "Location",
+                    "contact.locationValue": "No. 8, Yuan Cun Yiheng Road, Tianhe District, Guangzhou, Guangdong Province",
+                    "contact.phone": "Phone",
+                    "contact.follow": "Follow Me",
+                    "footer.copyright": "&copy; 2025 Wain. All rights reserved."
+                },
+                zh: {
+                    "nav.about": "关于我",
+                    "nav.photography": "摄影集",
+                    "nav.skills": "技能",
+                    "nav.projects": "项目",
+                    "nav.contact": "联系",
+                    "hero.creative": "创意",
+                    "hero.designer": "开发者",
+                    "hero.description": "我专注于创建和收集交互式数字体验，注重创新动画和以用户为中心的设计理念。",
+                    "hero.viewPhotos": "查看我的摄影",
+                    "hero.viewWork": "查看作品",
+                    "photography.title": "我的摄影集",
+                    "photography.desc": "透过镜头捕捉的瞬间集合 — 聚焦现实生活中、光影与人文之美。",
+                    "photography.seeMore": "了解更多关于我的信息",
+                    "about.title": "关于我",
+                    "about.experience": "年工作经验",
+                    "about.hello": "你好，我是Wain",
+                    "about.description1": "我是一名充满激情的开发者，拥有2年多开发经验，乐于创建用户喜爱的数字产品的经验。",
+                    "about.description2": "我擅长后端开发、但是我喜欢UI/UX设计，专注于在各种数字平台上创造连贯的品牌体验很有意思。当我不设计或编码时，你会发现我在探索摄影、徒步旅行或尝试新的创意工具。",
+                    "about.name": "姓名：",
+                    "about.email": "邮箱：",
+                    "about.location": "所在地：",
+                    "about.locationValue": "中国，广州",
+                    "about.availability": "可工作类型：",
+                    "about.availabilityValue": "自由职业 & 全职",
+                    "about.letsTalk": "聊聊吧",
+                    "skills.title": "我的技能",
+                    "skills.description": "在我的职业生涯中，我使用过各种技术和工具。",
+                    "skills.designSkills": "设计技能",
+                    "skills.typography": "排版设计",
+                    "skills.branding": "品牌设计",
+                    "skills.wireframing": "线框图设计",
+                    "skills.devSkills": "开发技能",
+                    "skills.responsive": "响应式设计",
+                    "skills.tools": "我使用的工具",
+                    "skills.terminal": "终端",
+                    "skills.deviceLab": "设备测试",
+                    "projects.title": "我的项目",
+                    "projects.description": "精选我最近的作品，展示我在设计和开发方面的技能。",
+                    "projects.ecommerce": "电子商务网站重设计",
+                    "projects.ecommerceDesc": "电子商务平台的全面重新设计，专注于改善用户体验。",
+                    "projects.ecommerceTag": "电子商务",
+                    "projects.fitness": "健身追踪应用",
+                    "projects.fitnessDesc": "一款移动应用，旨在帮助用户跟踪健身目标。",
+                    "projects.mobile": "移动应用",
+                    "projects.architect": "建筑师作品集",
+                    "projects.architectDesc": "为建筑公司设计的极简主义作品集网站。",
+                    "projects.webDesign": "网页设计",
+                    "projects.portfolio": "作品集",
+                    "projects.viewProject": "查看项目",
+                    "projects.viewAll": "查看所有项目",
+                    "contact.title": "联系我",
+                    "contact.description": "有兴趣合作吗？在下面的表格中填写信息。",
+                    "contact.yourName": "您的姓名",
+                    "contact.email": "邮箱地址",
+                    "contact.subject": "主题",
+                    "contact.message": "您的留言",
+                    "contact.send": "发送消息",
+                    "contact.info": "联系信息",
+                    "contact.location": "地址",
+                    "contact.locationValue": "广州市天河区员村一横路8号",
+                    "contact.phone": "电话",
+                    "contact.follow": "关注我",
+                    "footer.copyright": "© 2025 Wain. 保留所有权利。"
+                }
+            };
+
+            // 语言切换函数
+            function setLanguage(lang) {
+                // 更新按钮激活状态
+                document.querySelectorAll('.lang-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+                });
+                
+                // 翻译所有带data-i18n属性的元素
+                document.querySelectorAll('[data-i18n]').forEach(element => {
+                    const key = element.getAttribute('data-i18n');
+                    if (translations[lang]?.[key]) element.innerHTML = translations[lang][key];
+                });
+                
+                // 保存用户语言偏好到本地存储
+                localStorage.setItem('preferredLanguage', lang);
+            }
+
+            // 导航栏滚动效果
+            const navbar = document.getElementById('navbar');
+            let lastScrollY = window.scrollY;
+            
+            function handleScroll() {
+                const currentScrollY = window.scrollY;
+                if (Math.abs(currentScrollY - lastScrollY) < 10) {
+                    requestAnimationFrame(handleScroll);
+                    return;
+                }
+                
+                navbar.classList.toggle('nav-scrolled', currentScrollY > 50);
+                lastScrollY = currentScrollY;
+                requestAnimationFrame(handleScroll);
+            }
+            requestAnimationFrame(handleScroll);
+            
+            // 移动端菜单切换
+            const menuToggle = document.getElementById('menu-toggle');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            menuToggle.addEventListener('click', () => {
+                const isHidden = mobileMenu.classList.contains('opacity-0');
+                mobileMenu.classList.toggle('opacity-0', !isHidden);
+                mobileMenu.classList.toggle('-translate-y-full', !isHidden);
+                mobileMenu.classList.toggle('pointer-events-none', !isHidden);
+                mobileMenu.classList.toggle('opacity-100', isHidden);
+                mobileMenu.classList.toggle('translate-y-0', isHidden);
+                mobileMenu.classList.toggle('pointer-events-auto', isHidden);
+                menuToggle.innerHTML = isHidden ? '<i class="fa fa-times"></i>' : '<i class="fa fa-bars"></i>';
+            });
+            
+            // 平滑滚动
+            document.addEventListener('click', e => {
+                const anchor = e.target.closest('a[href^="#"]');
+                if (!anchor) return;
+                
+                e.preventDefault();
+                const targetId = anchor.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    if (!mobileMenu.classList.contains('opacity-0')) {
+                        mobileMenu.classList.add('opacity-0', '-translate-y-full', 'pointer-events-none');
+                        mobileMenu.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto');
+                        menuToggle.innerHTML = '<i class="fa fa-bars"></i>';
+                    }
+                }
+            });
+            
+            // 滚动渐入动画
+            const fadeElements = document.querySelectorAll('.fade-in');
+            let animationFrameId = null;
+            
+            function throttle(func, limit) {
+                let lastFunc, lastRan;
+                return (...args) => {
+                    if (!lastRan) {
+                        func(...args);
+                        lastRan = Date.now();
+                    } else {
+                        clearTimeout(lastFunc);
+                        lastFunc = setTimeout(() => {
+                            if (Date.now() - lastRan >= limit) {
+                                func(...args);
+                                lastRan = Date.now();
+                            }
+                        }, limit - (Date.now() - lastRan));
+                    }
+                };
+            }
+            
+            const fadeInObserver = new IntersectionObserver(throttle(entries => {
+                if (animationFrameId) cancelAnimationFrame(animationFrameId);
+                
+                animationFrameId = requestAnimationFrame(() => {
+                    let delay = 0;
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting && !entry.target.classList.contains('visible')) {
+                            setTimeout(() => {
+                                entry.target.classList.add('visible');
+                                fadeInObserver.unobserve(entry.target);
+                            }, delay);
+                            delay += 100;
+                        }
+                    });
+                });
+            }, 100), { 
+                threshold: 0.1,
+                rootMargin: '0px 0px -100px 0px'
+            });
+            
+            fadeElements.forEach(el => fadeInObserver.observe(el));
+            
+            // 语言切换事件
+            document.addEventListener('click', e => {
+                if (e.target.classList.contains('lang-btn')) {
+                    setLanguage(e.target.getAttribute('data-lang'));
+                }
+            });
+            
+            // 初始化语言
+            setLanguage(userLang);
+        });
+    </script>
+</body>
+</html>
+    
